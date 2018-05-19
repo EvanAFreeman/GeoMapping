@@ -82,12 +82,12 @@
                 .domain([0, 5000, 10000, 20000, 40000])
 				.range(["#fcbba1","#fc9272","#fb6a4a","#de2d26","#a50f15"]);
 
-            var colorAg = d3.scaleQuantize()
+            var colorPol = d3.scaleQuantize()
                 .range(["#2b8cbe", "#e34a33"]);
             var popLegend = d3.scaleLinear()
                   .range(["#fcbba1","#a50f15"]);
             
-             var agLegend = d3.scaleLinear()
+             var polLegend = d3.scaleLinear()
                   .range(["#2b8cbe","#e34a33"]);
             var svgLegend = d3.select("body")
 						      .append("svg")
@@ -95,54 +95,23 @@
 						      .attr("height", 480)
                               .attr("transform", "translate(120,-20)");;
             
-            /*
-            svgLegend.append("g")
-              .attr("class", "legendPop")
-              .attr("transform", "translate(220,20)");
-            var legendPop = d3.legendColor()
-              .shapeWidth(30).shapePadding(0)
-              .orient('horizontal')
-              .title('Population')
-              .scale(popLegend);
-            svgLegend.select(".legendPop")
-              .call(legendPop);
-            
-            
-            svgLegend.append("g")
-              .attr("class", "legendAg")
-              .attr("transform", "translate(0,20)");
-            var legendAg = d3.legendColor()
-              .shapeWidth(30).shapePadding(0)
-              .orient('horizontal')
-              .title('Political Alignment')    
-              .scale(agLegend);
-            svgLegend.select(".legendAg")
-              .call(legendAg);
-            */
             
 			//Create SVG element
 			var svg = d3.select("body")
 						.append("svg")
 						.attr("width", w)
 						.attr("height", h);
-            
-            
-            
-            
-            
-            
-            
 
-
+            
     d3.csv("maps.csv", function(data) {
 
 				//Set input domain for color scale
-				colorAg.domain([
+				colorPol.domain([
                     d3.min(data, function(d) { return d.politics; }), 
                     d3.max(data, function(d) { return d.politics; })
                 ]);
                 
-                agLegend.domain([
+                polLegend.domain([
                     d3.min(data, function(d) { return d.politics; }), 
                     d3.max(data, function(d) { return d.politics; })
                 ]);
@@ -191,9 +160,7 @@ var logLegend = d3.legendColor()
     .scale(log);
 
 svg.select(".legendLog")
-  .call(logLegend);
-
-                    
+  .call(logLegend);                
                     
                     
                     
@@ -214,157 +181,50 @@ var logLegend1 = d3.legendColor()
 
 svg.select(".legendLog1")
   .call(logLegend1);
-               
-                    
-                    
-
-/*     
-          
-var linear = d3.scaleLinear()
-  .domain([0,10])
-  .range(["rgb(46, 73, 123)", "rgb(71, 187, 94)"]);
-
-var svg = d3.select("svg");
-
-svg.append("g")
-  .attr("class", "legendLinear")
-  .attr("transform", "translate(20,40)");
-
-var legendLinear = d3.legendColor()
-  .shapeWidth(30)
-  .title("Population Density")
-  .orient('horizontal')
-  .scale(linear);
-
-svg.select(".legendLinear")
-  .call(legendLinear);      
-          
-        
-var threshold = d3.scaleThreshold().range(["blue", "red"]);               
-                                    
-var linear1 = d3.scaleLinear()
-  threshold.domain([0,10])
-  //.range(["rgb(46, 73, 123)", "rgb(71, 1, 1)"]);
-//return threshold(d.value);
-
-var svg = d3.select("svg");
-
-svg.append("g")
-  .attr("class", "legendLinear1")
-  .attr("transform", "translate(20,120)");
-
-var legendLinear1 = d3.legendColor()
-  .shapeWidth(30)
-  .title("Political Alignment D/R")
-  .orient('horizontal')
-  .scale(linear1);
-
-svg.select(".legendLinear1")
-  .call(legendLinear1);  
-        
-*/                                    
-                                    
-                                    
-                                    
-                    //Bind data and create one path per GeoJSON feature
-					svg.selectAll("path")
-					   .data(json.features)
-					   .enter()
-					   .append("path")
-					   .attr("d", path).attr("stroke","#fff")
-					   .style("fill", function(d) {
-					   		//Get data value
-					   		var value = d.properties.politics;
-					   		
-					   		if (value) {
-					   			//If value exists…
-						   		return colorAg(value);
-					   		} else {
-					   			//If value is undefined…
-						   		return "#2b8cbe";
-					   		}
-					   });
-			
-				});
-			
-			});
-            
-            
-			            // Defining Button Interactivity
-            var togData = false;
-             
-            /*d3.select(".toggleData")
-                .on("click", function(){
-                    // Determine if current line is visible
-                    togData=!togData;
-                    console.log(togData);
-                    if (togData == true){
-                        svg.selectAll("path")
-                            .transition().duration(800)
-                            .style("fill", function(d) {
-                                var value = d.properties.population;
-                                if (value) {
-                                    //If value exists…
-                                    return colorPop(value);
-                                } else {
-                                    //If value is undefined…
-                                    return "#ccc";
-                                } 
-                         });
-                    
-                        d3.select("body")
-                            .transition().duration(800)
-                            .style("background-color","#381616");
-                        
-                        d3.select(".toggleData")
-                            .transition().duration(800)
-                            .style("background-color","#823232");
-                        
-                        d3.select("h1")
-                            .transition().duration(800)
-                            .text("Guam Population Density, 2010");
-                        
-                    }
                 
-                    if (togData == false){
-                        svg.selectAll("path")
-                            .transition().duration(800)
-                            .style("fill", function(d) {
-                                var value = d.properties.politics;
-                                if (value) {
-                                    //If value exists…
-                                    return colorAg(value);
-                                } else {
-                                    //If value is undefined…
-                                    return "#ccc";
-                                } 
-                         });
-                    
-                        d3.select("body")
-                            .transition().duration(800)
-                            .style("background-color","#0c210e");
-                        
-                        d3.select(".toggleData")
-                            .transition().duration(800)
-                            .style("background-color","#28682d");
-                        
-                        d3.select("h1")
-                            .transition().duration(800)
-                            .text("Guam Political Alignments D/R, 2010");
-                        
-                    }
-                 });*/
+                                    
+                                    
+                                    
+    //Bind data and create one path per GeoJSON feature
+    svg.selectAll("path")
+       .data(json.features)
+       .enter()
+       .append("path")
+       .attr("d", path).attr("stroke","#fff")
+       .style("fill", function(d) {
+            //Get data value
+            var value = d.properties.politics;
+
+            if (value) {
+                //If value exists…
+                return colorPol(value);
+            } else {
+                //If value is undefined…
+                return "#2b8cbe";
+            }
+       });
+
+    });
+
+});
+
             
             var toggle = true;
             
             d3.select(".toggleData").on("click", function (d){
                 if(toggle == false){
                     toggle = true; 
+                    
+                    d3.select("h1")
+                            .transition().duration(800)
+                            .text("Guam Political Alignments D/R, 2010");
                     }
                 else{
+                    d3.select("h1")
+                            .transition().duration(800)
+                            .text("Guam Population Distribution, 2010");
                     toggle = false
                 }
-                //toggle = !toggle;
                 console.log(toggle);
             if(toggle == false){ 
                 d3.selectAll("path").style("fill", function(d){
@@ -396,6 +256,21 @@ svg.select(".legendLinear1")
             }
             });
 			
-		</script>
+</script>
+
+    
+    <h4> Github: https://github.com/EvanAFreeman/GeoMapping</h4>
+      
+    <h4> Sources: </h4>
+      <li>http://d3-legend.susielu.com/</li>
+      <li>https://github.com/balakrishna-k</li>
+      <li>https://en.wikipedia.org/wiki/Villages_of_Guam</li>
+        
+    <h4>Evan Freeman</h4>
+        
+    <h4>Instructor: Suresh Lodha</h4>
+    <h4>CMPS 165: Data programming for Visualization</h4>
+    <h4>Spring 2018</h4>
+        
 	</body>
 </html>
