@@ -101,7 +101,7 @@
 						.attr("height", h);
 
             
-    d3.csv("maps.csv", function(data) {
+    d3.csv("index.csv", function(data) {
 
 				//Set input domain for color scale
 				colorPol.domain([
@@ -115,7 +115,7 @@
                 ]);
 
 				//Load in GeoJSON data
-				d3.json("gadm36_GUM_1.json", function(json) {
+				d3.json("index.json", function(json) {
                     //Merge the ag. data and GeoJSON
                     //Loop through once for each data value
                     for (var i = 0; i < data.length; i++) {
